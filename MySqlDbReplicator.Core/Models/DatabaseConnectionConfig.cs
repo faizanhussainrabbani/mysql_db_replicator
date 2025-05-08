@@ -51,7 +51,7 @@ namespace MySqlDbReplicator.Core.Models
         /// <summary>
         /// Whether to use SSL for the connection
         /// </summary>
-        public bool UseSSL { get; set; } = false;
+        public bool UseSSL { get; set; } = true; // Default to true for security
 
         /// <summary>
         /// Path to SSL certificate file
@@ -80,21 +80,21 @@ namespace MySqlDbReplicator.Core.Models
         public string BuildConnectionString()
         {
             var connectionString = $"Server={Host};Port={Port};Database={Database};User ID={Username};Password={Password};";
-            
+
             connectionString += $"Connect Timeout={ConnectionTimeout};";
             connectionString += $"MaximumPoolSize={MaxPoolSize};";
             connectionString += $"MinimumPoolSize={MinPoolSize};";
-            
+
             if (UseSSL)
             {
                 connectionString += "SslMode=Required;";
-                
+
                 if (!string.IsNullOrEmpty(SslCertPath))
                     connectionString += $"SslCert={SslCertPath};";
-                
+
                 if (!string.IsNullOrEmpty(SslKeyPath))
                     connectionString += $"SslKey={SslKeyPath};";
-                
+
                 if (!string.IsNullOrEmpty(SslCaPath))
                     connectionString += $"SslCa={SslCaPath};";
             }
@@ -102,12 +102,12 @@ namespace MySqlDbReplicator.Core.Models
             {
                 connectionString += "SslMode=None;";
             }
-            
+
             foreach (var param in AdditionalParameters)
             {
                 connectionString += $"{param.Key}={param.Value};";
             }
-            
+
             return connectionString;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommandLine;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MySqlDbReplicator.Cli.Commands;
@@ -56,6 +57,12 @@ namespace MySqlDbReplicator.Cli
                 // Default to Information level, can be overridden with --verbose flag
                 builder.SetMinimumLevel(LogLevel.Information);
             });
+
+            // Add configuration
+            var configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables("MYSQL_REPLICATOR_")
+                .Build();
+            services.AddSingleton<IConfiguration>(configuration);
 
             // Add core services
             services.AddSingleton<DatabaseConnectionFactory>();

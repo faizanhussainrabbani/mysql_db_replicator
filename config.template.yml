@@ -2,12 +2,12 @@ source:
   host: localhost
   port: 3306
   database: source_db
-  username: username
-  password: password
+  username: '' # DO NOT use 'root' in production
+  password: '' # Store passwords securely, not in this file
   connectionTimeout: 30
   maxPoolSize: 100
   minPoolSize: 0
-  useSSL: false
+  useSSL: true # Always use SSL in production
   sslCertPath: ''
   sslKeyPath: ''
   sslCaPath: ''
@@ -16,12 +16,12 @@ target:
   host: localhost
   port: 3306
   database: target_db
-  username: username
-  password: password
+  username: '' # DO NOT use 'root' in production
+  password: '' # Store passwords securely, not in this file
   connectionTimeout: 30
   maxPoolSize: 100
   minPoolSize: 0
-  useSSL: false
+  useSSL: true # Always use SSL in production
   sslCertPath: ''
   sslKeyPath: ''
   sslCaPath: ''

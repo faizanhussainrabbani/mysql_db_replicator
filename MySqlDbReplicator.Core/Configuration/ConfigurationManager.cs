@@ -13,21 +13,27 @@ namespace MySqlDbReplicator.Core.Configuration
     public class ConfigurationManager
     {
         private readonly IConfiguration _configuration;
+        private const string ENV_PREFIX = "MYSQL_REPLICATOR_";
 
         /// <summary>
         /// Initializes a new instance of the ConfigurationManager class
         /// </summary>
         /// <param name="configFilePath">Path to the configuration file</param>
         /// <param name="commandLineArgs">Command line arguments</param>
-        public ConfigurationManager(string configFilePath, string[] commandLineArgs = null)
+        /// <param name="useUserSecrets">Whether to use user secrets (for development)</param>
+        /// <param name="userSecretsId">User secrets ID (optional)</param>
+        public ConfigurationManager(string configFilePath, string[] commandLineArgs = null,
+            bool useUserSecrets = false, string userSecretsId = "mysql-db-replicator")
         {
             var builder = new ConfigurationBuilder()
-                .AddEnvironmentVariables("MYSQL_REPLICATOR_");
+                // Environment variables have higher priority than config files
+                .AddEnvironmentVariables(ENV_PREFIX);
 
+            // Add configuration file if provided
             if (!string.IsNullOrEmpty(configFilePath) && File.Exists(configFilePath))
             {
                 var extension = Path.GetExtension(configFilePath).ToLowerInvariant();
-                
+
                 if (extension == ".json")
                 {
                     builder.AddJsonFile(configFilePath, optional: false, reloadOnChange: true);
@@ -39,10 +45,10 @@ namespace MySqlDbReplicator.Core.Configuration
                     var deserializer = new DeserializerBuilder()
                         .WithNamingConvention(CamelCaseNamingConvention.Instance)
                         .Build();
-                    
+
                     var yamlObject = deserializer.Deserialize<object>(yamlString);
                     var jsonString = System.Text.Json.JsonSerializer.Serialize(yamlObject);
-                    
+
                     builder.AddJsonStream(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(jsonString)));
                 }
                 else
@@ -51,6 +57,17 @@ namespace MySqlDbReplicator.Core.Configuration
                 }
             }
 
+            // Add user secrets for development environments
+            // Note: This requires Microsoft.Extensions.Configuration.UserSecrets package
+            // Commented out until the package is added to the project
+            /*
+            if (useUserSecrets && !string.IsNullOrEmpty(userSecretsId))
+            {
+                builder.AddUserSecrets(userSecretsId);
+            }
+            */
+
+            // Command line args have highest priority
             if (commandLineArgs != null)
             {
                 builder.AddCommandLine(commandLineArgs);
@@ -78,7 +95,7 @@ namespace MySqlDbReplicator.Core.Configuration
         public void SaveReplicationConfig(ReplicationConfig config, string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            
+
             if (extension == ".json")
             {
                 var jsonString = System.Text.Json.JsonSerializer.Serialize(config, new System.Text.Json.JsonSerializerOptions
@@ -92,7 +109,7 @@ namespace MySqlDbReplicator.Core.Configuration
                 var serializer = new SerializerBuilder()
                     .WithNamingConvention(CamelCaseNamingConvention.Instance)
                     .Build();
-                
+
                 var yamlString = serializer.Serialize(config);
                 File.WriteAllText(filePath, yamlString);
             }
@@ -115,16 +132,18 @@ namespace MySqlDbReplicator.Core.Configuration
                     Host = "localhost",
                     Port = 3306,
                     Database = "source_db",
-                    Username = "root",
-                    Password = "password"
+                    Username = string.Empty, // Do not use default credentials
+                    Password = string.Empty, // Do not use default credentials
+                    UseSSL = true // Enable SSL by default for security
                 },
                 Target = new DatabaseConnectionConfig
                 {
                     Host = "localhost",
                     Port = 3306,
                     Database = "target_db",
-                    Username = "root",
-                    Password = "password"
+                    Username = string.Empty, // Do not use default credentials
+                    Password = string.Empty, // Do not use default credentials
+                    UseSSL = true // Enable SSL by default for security
                 },
                 Mode = ReplicationMode.Full,
                 SyncSchema = true,
