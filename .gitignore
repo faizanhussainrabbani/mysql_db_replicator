@@ -43,8 +43,9 @@ sample-config.yml
 # Allow project-related JSON files
 !*.csproj.json
 
-# Generated SQL scripts
+# Generated SQL scripts and reports
 *.sql
+comparison-report.md
 
 # Checkpoints
 checkpoints/
