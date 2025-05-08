@@ -1,0 +1,80 @@
+# .NET build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.user
+*.suo
+*.cache
+*.log
+*.vs
+.vs/
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user
+*.userprefs
+*.usertasks
+*.pidb
+*.svclog
+*.scc
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# Configuration files with sensitive information
+*.yml
+*.yaml
+*.config
+appsettings.*.json
+appsettings.json
+*secrets*.json
+
+# Allow template files
+!config.template.yml
+
+# Specific configuration files
+test-config.yml
+interactive-config.yml
+sample-config.yml
+
+# Allow project-related JSON files
+!*.csproj.json
+
+# Generated SQL scripts
+*.sql
+
+# Checkpoints
+checkpoints/
+
+# Logs
+logs/
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# NuGet packages
+packages/
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# User-specific files
+*.rsuser
+*.userosscache

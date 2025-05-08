@@ -1,0 +1,52 @@
+source:
+  host: localhost
+  port: 3306
+  database: source_db
+  username: username
+  password: password
+  connectionTimeout: 30
+  maxPoolSize: 100
+  minPoolSize: 0
+  useSSL: false
+  sslCertPath: ''
+  sslKeyPath: ''
+  sslCaPath: ''
+  additionalParameters: {}
+target:
+  host: localhost
+  port: 3306
+  database: target_db
+  username: username
+  password: password
+  connectionTimeout: 30
+  maxPoolSize: 100
+  minPoolSize: 0
+  useSSL: false
+  sslCertPath: ''
+  sslKeyPath: ''
+  sslCaPath: ''
+  additionalParameters: {}
+mode: Full
+syncSchema: true
+previewSchemaChanges: true
+batchSize: 1000
+maxRetryAttempts: 3
+retryDelayMs: 1000
+conflictResolution: SourceWins
+includeSchemas: []
+excludeSchemas: []
+includeTables: []
+excludeTables: []
+parallelThreads: 1
+enableCheckpointing: false
+checkpointPath: ./checkpoints
+emailNotification:
+  enabled: false
+  smtpServer: ''
+  smtpPort: 25
+  useSsl: true
+  username: ''
+  password: ''
+  fromAddress: ''
+  toAddresses: []
+dataMaskingRules: []
